@@ -1,13 +1,13 @@
-var express = require("express");
-var router = express.Router();
+const express = require("express");
+const router = express.Router();
 const hash = require("hash.js");
 
 const conversation1 = require("../messages-1.json");
 const conversation2 = require("../messages-2.json");
 
 router.get("/", function (req, res) {
-  const conversation = req.query.conversation;
-  const limit = req.query.limit;
+  const conversation = req.query.conversation || 1;
+  const limit = req.query.limit || 0;
 
   const messages = conversation == 1 ? conversation1 : conversation2;
 
@@ -73,7 +73,10 @@ router.get("/", function (req, res) {
 
     run("");
 
-    return result;
+    // remove 'parent' field from the result
+    return result.map((r) => {
+      return { encrypted: r.encrypted, id: r.id };
+    });
   }
 
   //
